@@ -4,10 +4,12 @@ package org.usersystem.demo.pojo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 //挂号表
 public class RegisterInfo {
     private String register_id;//挂号id
