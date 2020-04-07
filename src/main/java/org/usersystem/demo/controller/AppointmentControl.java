@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.usersystem.demo.dao.AppointmentDao;
 import org.usersystem.demo.opt.*;
-import org.usersystem.demo.pojo.BlackListInfo;
 import org.usersystem.demo.pojo.DoctorInfo;
 import org.usersystem.demo.pojo.AppointmentHistoryInfo;
 import org.usersystem.demo.pojo.AppointmentInfo;
