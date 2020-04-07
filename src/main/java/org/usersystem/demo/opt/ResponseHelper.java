@@ -25,6 +25,9 @@ public class ResponseHelper {
     public static ResponseV2 create(int code) {
         return create((Object)null, code, "请求成功");
     }
+    public static ResponseV2 create(int code, String msg) {
+        return create((Object)null, code, msg);
+    }
 
     public static ResponseV2 create() {
         return create((Object)null, 200, "请求成功");
@@ -43,5 +46,7 @@ public class ResponseHelper {
     public static void writeCookie(HttpServletResponse response, String cookieName, String value, String domain) {
         writeCookie(response, cookieName, value, "/", 2592000, domain);
     }
+
+
 }
 
