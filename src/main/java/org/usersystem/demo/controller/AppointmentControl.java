@@ -2,20 +2,15 @@ package org.usersystem.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.usersystem.demo.dao.BlackListDao;
-import org.usersystem.demo.dao.ReserveDao;
+import org.usersystem.demo.dao.AppointmentDao;
 import org.usersystem.demo.opt.*;
 import org.usersystem.demo.pojo.BlackListInfo;
 import org.usersystem.demo.pojo.DoctorInfo;
-import org.usersystem.demo.pojo.ReserveHistoryInfo;
-import org.usersystem.demo.pojo.ReserveInfo;
+import org.usersystem.demo.pojo.AppointmentHistoryInfo;
+import org.usersystem.demo.pojo.AppointmentInfo;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.lang.reflect.MalformedParameterizedTypeException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +20,8 @@ import java.util.Map;
 public class AppointmentControl {
 
     @Autowired
-    ReserveDao reserveDao;
+    AppointmentDao reserveDao;
 
-    @Autowired
-    BlackListDao blackListDao;
 
     private static String[] morningTimes = {" 08:00:00"," 09:00:00"," 10:00:00"};
     private static String[] afternoonTimes = {" 13:00:00"," 14:00:00"," 15:00:00"};
@@ -38,20 +31,10 @@ public class AppointmentControl {
     @ResponseBody
     public ResponseV2 addReserve(@RequestBody JSONObject jsonObject) {
         String user_id = jsonObject.getString("user_id");
-        BlackListInfo blackListInfo = blackListDao.searchBalckUserById(user_id);
         String reserve_date = jsonObject.getString("reserve_time");
-        if (blackListInfo != null) {
-            String end_time = blackListInfo.getEnd_time();
-            boolean is_late = TimeOpt.compareDate(reserve_date + " 01:00:00", end_time);
-            if (!is_late) {
-                return ResponseHelper.create(null, 10011, "目前处于禁止预约状态,解禁时间为:\t" + end_time.split(" ")[0]);
-            } else {
-                blackListDao.deleteBlackUser(user_id);
-            }
-        }
 
         Map<String, String> paraMap = new HashMap();
-        ReserveInfo reserveInfo = new ReserveInfo();
+        AppointmentInfo reserveInfo = new AppointmentInfo();
         String reserve_id = GetUUID.getUUID();
         String create_time = TimeOpt.getCurrentTime();
 
@@ -125,7 +108,7 @@ public class AppointmentControl {
         String user_id =(String) map.get("user_id");
         HashMap hashMap = new HashMap();
         hashMap.put("user_id", user_id);
-        List<ReserveHistoryInfo> reserveList = reserveDao.searchReserveHistory(hashMap);
+        List<AppointmentHistoryInfo> reserveList = reserveDao.searchReserveHistory(hashMap);
 
         JSONObject jobj = new JSONObject();
         jobj.put("code",0);
@@ -140,7 +123,7 @@ public class AppointmentControl {
     @ResponseBody
     public ResponseV2 reserveInfoDetail(@RequestBody JSONObject para) {
         String reserve_id = para.getString("reserve_id");
-        ReserveInfo reserveInfo = reserveDao.reserveInfoDetail(reserve_id);
+        AppointmentInfo reserveInfo = reserveDao.reserveInfoDetail(reserve_id);
         return ResponseHelper.create(reserveInfo, 200, "详细预约信息查询成功");
     }
 
