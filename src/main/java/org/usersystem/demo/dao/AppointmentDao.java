@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.*;
 import org.usersystem.demo.pojo.DoctorInfo;
 import org.usersystem.demo.pojo.AppointmentHistoryInfo;
 import org.usersystem.demo.pojo.AppointmentInfo;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,15 +15,18 @@ public interface AppointmentDao {
             "staff_id, reserve_time, reserve_status,create_time) " +
             "values(#{reserve_id},#{user_id},#{illness_content},#{dep_id}," +
             "#{staff_id},#{reserve_time},#{reserve_status},#{create_time}) ")
-    void addReserve(AppointmentInfo reserveInfo);
+    void addReserve(AppointmentInfo appointmentInfo);
 
-    @Select("select distinct distinct reserve_id,r.user_id,user_name,user_tel,illness_content," +
+    @Select("select reserve_id,r.user_id,user_name,user_tel,illness_content," +
             "reserve_time,reserve_status,staff_name,dep_name" +
             " from reserve_info r left join user_info on r.user_id = user_info.user_id" +
             " join dep_info d on r.dep_id = d.dep_id left join staff_info s" +
             " on r.staff_id = s.staff_id where r.user_id=#{user_id} " +
             " order by reserve_time ")
     List<AppointmentHistoryInfo> searchReserveHistory(Map<String,String> paraMap);
+
+    // where r.user_id=#{user_id} and reserve_time >= #{start_time} and reserve_time <= #{end_time}
+    //desc limit #{start},#{size}
 
     @Select("select * from reserve_info where reserve_id=#{reserve_id}")
     AppointmentInfo reserveInfoDetail(String reserve_id);
