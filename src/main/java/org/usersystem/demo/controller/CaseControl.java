@@ -1,21 +1,17 @@
 package org.usersystem.demo.controller;
 
 
-import com.alibaba.fastjson.JSON;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.usersystem.demo.dao.CaseDao;
 import org.usersystem.demo.opt.ResponseHelper;
 import org.usersystem.demo.opt.ResponseV2;
 import org.usersystem.demo.pojo.CaseInfo;
-import org.usersystem.demo.pojo.MedicalInfo;
 
 import javax.annotation.Resource;
-import javax.print.attribute.HashAttributeSet;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
