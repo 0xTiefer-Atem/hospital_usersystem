@@ -3,10 +3,12 @@ package org.usersystem.demo.pojo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class MedicalInfo {
     private String medical_id;//药物id
     private String medical_name;//药物名称
