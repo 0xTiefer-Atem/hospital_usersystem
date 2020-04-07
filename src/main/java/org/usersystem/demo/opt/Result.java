@@ -8,7 +8,6 @@ public class Result<T> {
     @ConstructorProperties({"data", "extras"})
     Result(final T data, final T extras) {
         this.data = data;
-
     }
 
     public static <T> ResultBuilder<T> builder() {
