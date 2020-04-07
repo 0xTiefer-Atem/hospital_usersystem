@@ -24,9 +24,6 @@ public class AppointmentControl {
     @Resource
     AppointmentDao appointmentDao;
 
-    @Resource
-    BlackListDao blackListDao;
-
     private static String[] morningTimes = {" 08:00:00"," 09:00:00"," 10:00:00"};
     private static String[] afternoonTimes = {" 13:00:00"," 14:00:00"," 15:00:00"};
 
@@ -35,17 +32,7 @@ public class AppointmentControl {
     @ResponseBody
     public ResponseV2 addReserve(@RequestBody JSONObject jsonObject) {
         String user_id = jsonObject.getString("user_id");
-        BlackListInfo blackListInfo = blackListDao.searchBalckUserById(user_id);
         String reserve_date = jsonObject.getString("reserve_time");
-        if (blackListInfo != null) {
-            String end_time = blackListInfo.getEnd_time();
-            boolean is_late = TimeOpt.compareDate(reserve_date + " 01:00:00", end_time);
-            if (!is_late) {
-                return ResponseHelper.create(null, 10011, "目前处于禁止预约状态,解禁时间为:\t" + end_time.split(" ")[0]);
-            } else {
-                blackListDao.deleteBlackUser(user_id);
-            }
-        }
 
         Map<String, String> paraMap = new HashMap();
         AppointmentInfo appointmentInfo = new AppointmentInfo();
