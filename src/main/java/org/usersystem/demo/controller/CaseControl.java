@@ -20,8 +20,6 @@ import java.util.Map;
 @CrossOrigin
 public class CaseControl {
 
-
-
     @Resource
     CaseDao illnessDao;
 
