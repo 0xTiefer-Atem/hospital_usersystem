@@ -23,6 +23,6 @@ public interface UserDao {
     @Select("select user_pwd from user_info where user_tel=#{user_tel}")
     String searchPwdByTel(String user_tel);
 
-    @Select("select * from userInfo where userEmail = #{userEmail} ")
-    UserInfo userExists(String userEmail);
+    @Select("select * from userInfo where userTel = #{userTel} ")
+    UserInfo userExists(String userTel);
 }
