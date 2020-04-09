@@ -2,6 +2,7 @@ package org.usersystem.demo.opt;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.usersystem.demo.dao.UserDao;
 import org.usersystem.demo.pojo.UserInfo;
 import org.usersystem.demo.utils.SmsSendDemo;
@@ -9,6 +10,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +24,8 @@ import java.util.Map;
 
 public class OptUserJedis {
 
-//    @Autowired
-//    UserDao userDao;
+    @Resource
+    UserDao userDao;
 
 
     private static final Logger logger = Logger.getLogger(OptUserJedis.class);
@@ -62,7 +64,7 @@ public class OptUserJedis {
         jedis.select(1);
         String user_msg = JSON.toJSONString(user);
         logger.info("正在将用户: " + user_msg + " 写入redis...");
-        jedis.set(user.getUser_id(), user_msg);
+        jedis.set(user.getUserId(), user_msg);
         logger.info("写入成功");
         jedis.close();
     }
@@ -71,9 +73,9 @@ public class OptUserJedis {
     public String sendCode(UserInfo userInfo,UserDao userDao){
         Jedis jedis = jedisPool.getResource();
         jedis.select(0);
-        String user_id = userInfo.getUser_id();
-        String tel = userInfo.getUser_tel();
-        String user_eamil = userInfo.getUser_email();
+        String user_id = userInfo.getUserId();
+        String tel = userInfo.getUserTel();
+        String user_eamil = userInfo.getUserEmail();
         String result = "1006";
         String randomCode = "";
         if( tel!=null&&!tel.equals("")){
@@ -88,8 +90,8 @@ public class OptUserJedis {
                 e.printStackTrace();
             }
         }else {
-            int flag = userDao.userExists(user_eamil);
-            if (flag >= 1) {
+            UserInfo flag = userDao.userExists(user_eamil);
+            if (flag != null) {
                 return "1007";
             }
             myEmail = new MyEmail(user_eamil);
@@ -124,13 +126,11 @@ public class OptUserJedis {
 
         UserInfo userInfo = JSON.parseObject(user_msg,UserInfo.class);
         logger.info("查出用户信息： "+user_msg);
-        String user_create = TimeOpt.getCurrentTime();
-        userInfo.setUser_create(user_create);
         String create_time = TimeOpt.getCurrentTime();
-        userInfo.setCreate_time(create_time);
+        userInfo.setCreateTime(create_time);
         userDao.insertUser(userInfo);
         Map<String,String> resultMap = new HashMap<>();
-        resultMap.put("user_id",userInfo.getUser_id());
+        resultMap.put("user_id",userInfo.getUserId());
         return ResponseHelper.create(resultMap,200,"用户创建成功!请重新登录！");
     }
 
@@ -154,10 +154,10 @@ public class OptUserJedis {
         String user_id = "";
         switch (user_type){
             case "tel":
-                user_id = userDao.searchIdByTel(user_account);
+                user_id = userDao.searchPwdByTel(user_account);
                 break;
             case "email":
-                user_id  = userDao.searchIdByEmail(user_account);
+                user_id  = userDao.searchPwdByEmail(user_account);
                 break;
         }
         return ResponseHelper.create(user_id,200,"密码正确");
