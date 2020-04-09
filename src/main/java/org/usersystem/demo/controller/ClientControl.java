@@ -45,7 +45,9 @@ public class ClientControl {
         UserInfo userInfo = userDao.userExists(userAccount);
         if(userInfo != null){
             if(userPwd.equals(userInfo.getUserPwd())){
-                return ResponseHelper.create(userInfo.getUserId(), 200, "验证成功");
+                Map map = new HashMap();
+                map.put("userInfo", userInfo);
+                return ResponseHelper.create(map, 200, "验证成功");
             }
             return ResponseHelper.create(500, "密码错误!");
         }
