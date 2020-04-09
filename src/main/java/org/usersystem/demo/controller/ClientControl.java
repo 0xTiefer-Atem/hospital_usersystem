@@ -1,7 +1,6 @@
 package org.usersystem.demo.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.usersystem.demo.dao.UserDao;
@@ -18,6 +17,8 @@ public class ClientControl {
     @Resource
     UserDao userDao;
 
+
+    //注册接口
     @RequestMapping(value = "/register/user",method = RequestMethod.POST)
     @ResponseBody
     public ResponseV2 registerUser(@RequestBody UserInfo userInfo){
@@ -33,6 +34,8 @@ public class ClientControl {
         }
     }
 
+
+    //登陆接口
     @PostMapping(value = "/login/identify")
     @ResponseBody
     public ResponseV2 loginUser(@RequestBody Map paraMap){
