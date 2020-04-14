@@ -13,5 +13,5 @@ import lombok.ToString;
 @ToString
 public class CliInfo {
     private String cliId;
-    private String cilName;
+    private String cliName;
 }
