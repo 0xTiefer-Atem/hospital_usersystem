@@ -144,19 +144,21 @@ public class AppointmentControl {
         return ResponseHelper.create(null, 200, "取消预约信息成功,请重新预约");
     }
 
-    //查询医生上班情况
-    @RequestMapping(value = "/reserve/depworkstatus",method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseV2 getDoctorWorkTime(@RequestParam Map<String,Object> para) {
 
-        String cliId =(String) para.get("cliId");
+
+    //查询医生上班情况
+    @RequestMapping(value = "/get/staffWorkScheduleList",method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseV2 getDoctorWorkTime(@RequestBody JSONObject jsonObject) {
+        System.out.println(jsonObject.toJSONString());
+        String staffId =(String) jsonObject.get("staffId");
 
         List<DoctorInfo> doctorInfoList;
 
         Map<String,String> paraMap = new HashMap<>();
         String futureTime = "";
         futureTime = TimeOpt.getFetureDate(7).split(" ")[0];
-        paraMap.put("cliId",cliId);
+        paraMap.put("staffId",staffId);
         paraMap.put("future_time",futureTime);
         doctorInfoList = appointmentDao.getWorkTimeSevenDays(paraMap);
 
@@ -192,8 +194,5 @@ public class AppointmentControl {
     }
 
     public static void main(String[] args) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("cliId","123");
-        new AppointmentControl().getDoctorWorkTime(map);
     }
 }
