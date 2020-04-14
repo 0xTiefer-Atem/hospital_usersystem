@@ -149,25 +149,17 @@ public class AppointmentControl {
     @ResponseBody
     public ResponseV2 getDoctorWorkTime(@RequestParam Map<String,Object> para) {
 
-        String dep_id =(String) para.get("dep_id");
-        String type = (String)para.get("type");
-        System.out.println(dep_id+"  "+type);
+        String cliId =(String) para.get("cliId");
 
         List<DoctorInfo> doctorInfoList;
 
         Map<String,String> paraMap = new HashMap<>();
         String futureTime = "";
-        if(type != null && type.equals("today")){
-           futureTime = TimeOpt.getFetureDate(1).split(" ")[0];
-            paraMap.put("dep_id",dep_id);
-            paraMap.put("future_time",futureTime);
-            doctorInfoList = appointmentDao.getWorkTimeToday(paraMap);
-        }else {
-            futureTime = TimeOpt.getFetureDate(7).split(" ")[0];
-            paraMap.put("dep_id",dep_id);
-            paraMap.put("future_time",futureTime);
-            doctorInfoList = appointmentDao.getWorkTimeSevenDays(paraMap);
-        }
+        futureTime = TimeOpt.getFetureDate(7).split(" ")[0];
+        paraMap.put("cliId",cliId);
+        paraMap.put("future_time",futureTime);
+        doctorInfoList = appointmentDao.getWorkTimeSevenDays(paraMap);
+
 
         for (DoctorInfo doctorInfo: doctorInfoList) {
             if(doctorInfo.getWork_status().equals("ON")) {
@@ -201,7 +193,7 @@ public class AppointmentControl {
 
     public static void main(String[] args) {
         Map<String,Object> map = new HashMap<>();
-        map.put("dep_id","123");
+        map.put("cliId","123");
         new AppointmentControl().getDoctorWorkTime(map);
     }
 }
