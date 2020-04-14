@@ -43,11 +43,11 @@ public interface AppointmentDao {
     List<DoctorInfo> getWorkTimeToday(Map<String,String> para);
 
 
-    @Select("select doctor_id, staff_name,staff_sex,staff_pos,work_time,work_status" +
+    @Select("select staffId, staffName,staffSex,staffPos,work_time,work_status" +
             "            from doctor_info d left join staff_info s on d.doctor_id = s.staff_id" +
             "            where  to_days(work_time) >= to_days(now())" +
             "             and to_days(work_time) <= to_days(#{future_time})" +
-            "            and d.doctor_id like CONCAT(#{dep_id},'%') order by work_time asc")
+            "            and d.doctor_id = #{staffId} order by work_time asc")
     List<DoctorInfo> getWorkTimeSevenDays(Map<String,String> para);
 
 
