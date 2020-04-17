@@ -1,9 +1,9 @@
 package org.usersystem.demo.dao;
 
 import org.apache.ibatis.annotations.*;
-import org.usersystem.demo.pojo.DoctorInfo;
 import org.usersystem.demo.pojo.AppointmentHistoryInfo;
 import org.usersystem.demo.pojo.AppointmentInfo;
+import org.usersystem.demo.pojo.DoctorWorkInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -40,15 +40,16 @@ public interface AppointmentDao {
             "where  to_days(work_time) >= to_days(now()) " +
             " and to_days(work_time) < to_days(#{future_time}) and d.doctor_id like " +
             "CONCAT(#{dep_id},'%') ")
-    List<DoctorInfo> getWorkTimeToday(Map<String,String> para);
+    List<DoctorWorkInfo> getWorkTimeToday(Map<String,String> para);
 
 
-    @Select("select staffId, staffName,staffSex,staffPos,work_time,work_status" +
-            "            from doctor_info d left join staff_info s on d.doctor_id = s.staff_id" +
-            "            where  to_days(work_time) >= to_days(now())" +
-            "             and to_days(work_time) <= to_days(#{future_time})" +
-            "            and d.doctor_id = #{staffId} order by work_time asc")
-    List<DoctorInfo> getWorkTimeSevenDays(Map<String,String> para);
+    @Select("select distinct" +
+            " ap.appointmentTime" +
+            " from appointmentInfo ap" +
+            " where ap.staffId = #{staffId}" +
+            "  and ap.appointmentTime between #{startTime} and #{endTimeTime}" +
+            "  and ap.status = 'WAIT'")
+    List<DoctorWorkInfo> getWorkTimeSevenDays(Map<String,String> para);
 
 
     @Select("select count(reserve_id) from reserve_info where staff_id = #{staff_id} " +
