@@ -43,11 +43,11 @@ public class RegisterControl {
         }
 
         String current_time = TimeOpt.getCurrentTime();
-        String reserve_time = appointmentInfo.getReserve_time();
+        String appointmentTime = appointmentInfo.getAppointmentTime();
 
-        int flag = TimeOpt.is_late(current_time,reserve_time);
+        int flag = TimeOpt.is_late(current_time,appointmentTime);
         if(flag == -1){
-            String user_id = appointmentInfo.getUser_id();
+            String user_id = appointmentInfo.getUserId();
             BlackListInfo blackListInfo;
             blackListInfo = blackListDao.searchBalckUserById(user_id);
             if(blackListInfo != null){
