@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class TimeOpt {
     private static Date date = new Date();
-    private static String formatString = "yyyy-MM-dd HH:mm";
+    private static String formatString = "yyyy-MM-dd HH:mm:ss";
     private static SimpleDateFormat sdf = new SimpleDateFormat(formatString);
 
     /**
