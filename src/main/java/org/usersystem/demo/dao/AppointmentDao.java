@@ -10,12 +10,12 @@ import java.util.Map;
 
 @Mapper
 public interface AppointmentDao {
-    @Insert("insert into reserve_info " +
-            "(reserve_id, user_id, illness_content,dep_id," +
-            "staff_id, reserve_time, reserve_status,create_time) " +
-            "values(#{reserve_id},#{user_id},#{illness_content},#{dep_id}," +
-            "#{staff_id},#{reserve_time},#{reserve_status},#{create_time}) ")
-    void addReserve(AppointmentInfo appointmentInfo);
+    @Insert("insert into appointmentInfo " +
+            "(appointmentId, userId, " +
+            "staffId, appointmentTime, status,createTime) " +
+            "values(#{appointmentId},#{userId}," +
+            "#{staffId},#{appointmentTime},#{status},#{createTime}) ")
+    void addAppointmentInfo(AppointmentInfo appointmentInfo);
 
     @Select("select reserve_id,r.user_id,user_name,user_tel,illness_content," +
             "reserve_time,reserve_status,staff_name,dep_name" +
@@ -49,7 +49,7 @@ public interface AppointmentDao {
             " where ap.staffId = #{staffId}" +
             "  and ap.appointmentTime between #{startTime} and #{endTimeTime}" +
             "  and ap.status = 'WAIT'")
-    List<DoctorWorkInfo> getWorkTimeSevenDays(Map<String,String> para);
+    List<String> getWorkTimeSevenDays(Map<String,String> para);
 
 
     @Select("select count(reserve_id) from reserve_info where staff_id = #{staff_id} " +
