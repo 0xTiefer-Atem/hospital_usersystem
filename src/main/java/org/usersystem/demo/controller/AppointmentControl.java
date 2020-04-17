@@ -10,9 +10,7 @@ import org.usersystem.demo.pojo.AppointmentInfo;
 import org.usersystem.demo.pojo.DoctorWorkInfo;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @CrossOrigin
@@ -25,76 +23,37 @@ public class AppointmentControl {
     private static String[] afternoonTimes = {"13:00:00","14:00:00","15:00:00"};
 
     //录入预约信息
-    @RequestMapping(value = "/reserve/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/appointment/add", method = RequestMethod.POST)
     @ResponseBody
     public ResponseV2 addReserve(@RequestBody JSONObject jsonObject) {
-        String user_id = jsonObject.getString("user_id");
-        String reserve_date = jsonObject.getString("reserve_time");
+        System.out.println(jsonObject);
+        String userId = jsonObject.getString("userId");//获得用户id
+        String type = jsonObject.getString("type");//约上午还是下午
+        int num = jsonObject.getInteger("num");//他是第几个预约的
+        String staffId = jsonObject.getString("staffId");//要预约的医生的id
+        String date = jsonObject.getString("date");//预约的时间
 
         Map<String, String> paraMap = new HashMap();
         AppointmentInfo appointmentInfo = new AppointmentInfo();
-        String reserve_id = GetUUID.getUUID();
-        String create_time = TimeOpt.getCurrentTime();
+        String appointmentId = GetUUID.getUUID();
+        String createTime = TimeOpt.getCurrentTime();
 
-        appointmentInfo.setReserve_id(reserve_id);
-        appointmentInfo.setUser_id(user_id);
-//        reserveInfo.setIllness_content(jsonObject.getString("illness_content"));
-        appointmentInfo.setDep_id(jsonObject.getString("dep_id"));
-        appointmentInfo.setStaff_id(jsonObject.getString("staff_id"));
-        appointmentInfo.setReserve_status("SUCCESS");
-        appointmentInfo.setCreate_time(create_time);
-        int flag = jsonObject.getInteger("time");
+        appointmentInfo.setAppointmentId(appointmentId);
+        appointmentInfo.setUserId(userId);
+        appointmentInfo.setStaffId(jsonObject.getString("staff_id"));
+        appointmentInfo.setStatus("SUCCESS");
+        appointmentInfo.setCreateTime(createTime);
 
         ResponseV2 responseV2 = null;
 
-        //上午
-        if (flag == 1) {
-            paraMap.put("staff_id", jsonObject.getString("staff_id"));
-            paraMap.put("work_time1", reserve_date + " 08:00:00");
-            paraMap.put("work_time2", reserve_date + " 12:00:00");
-            int reserve_num = appointmentDao.getReserveNum(paraMap);
-            if (reserve_num == 0) {
-                String reserve_time = reserve_date + morningTimes[0];
-                appointmentInfo.setReserve_time(reserve_time);
-                appointmentDao.addReserve(appointmentInfo);
-                responseV2 = ResponseHelper.create(null, 200, "您已预约成功,时间为: "+reserve_date + morningTimes[0]);
-            } else if (reserve_num == 1) {
-                String reserve_time = reserve_date + morningTimes[1];
-                appointmentInfo.setReserve_time(reserve_time);
-                appointmentDao.addReserve(appointmentInfo);
-                responseV2 = ResponseHelper.create(null, 200, "您已预约成功,时间为: " +reserve_date+ morningTimes[1]);
-            } else if (reserve_num == 2) {
-                String reserve_time = reserve_date + morningTimes[2];
-                appointmentInfo.setReserve_time(reserve_time);
-                appointmentDao.addReserve(appointmentInfo);
-                responseV2 = ResponseHelper.create(null, 200, "您已预约成功,时间为: " +reserve_date+ morningTimes[2]);
-            } else if (reserve_num == 3) {
-                responseV2 = ResponseHelper.create("", 1007, "该医生这天上午预约已满,请换个时间预约");
-            }
-        } else if (flag == 2) {
-            paraMap.put("staff_id", appointmentInfo.getStaff_id());
-            paraMap.put("work_time1", reserve_date + " 13:00:00");
-            paraMap.put("work_time2", reserve_date + " 16:00:00");
-            int reserve_num = appointmentDao.getReserveNum(paraMap);
-            if (reserve_num == 0) {
-                String reserve_time = reserve_date + afternoonTimes[0];
-                appointmentInfo.setReserve_time(reserve_time);
-                appointmentDao.addReserve(appointmentInfo);
-                responseV2 = ResponseHelper.create(null, 200, "您已预约成功,时间为: " +reserve_date+ afternoonTimes[0]);
-            } else if (reserve_num == 1) {
-                String reserve_time = reserve_date + afternoonTimes[1];
-                appointmentInfo.setReserve_time(reserve_time);
-                appointmentDao.addReserve(appointmentInfo);
-                responseV2 = ResponseHelper.create(null, 200, "您已预约成功,时间为: "+reserve_date + afternoonTimes[1]);
-            } else if (reserve_num == 2) {
-                String reserve_time = reserve_date + afternoonTimes[2];
-                appointmentInfo.setReserve_time(reserve_time);
-                appointmentDao.addReserve(appointmentInfo);
-                responseV2 = ResponseHelper.create(null, 200, "您已预约成功,时间为: "+reserve_date + afternoonTimes[2]);
-            } else if (reserve_num == 3) {
-                responseV2 = ResponseHelper.create("", 1007, "该医生这天下午预约已满,请换个时间预约");
-            }
+        if("morning".equals(type)) {
+            String appointmentTime = date + morningTimes[num];
+            appointmentInfo.setAppointmentTime(appointmentTime);
+            appointmentDao.addAppointmentInfo(appointmentInfo);
         }
+
+
+        //上午
         return responseV2;
     }
 
@@ -143,14 +102,14 @@ public class AppointmentControl {
 
 
 
-    //查询医生上班情况
+    //查询医生7天内预约情况
     @RequestMapping(value = "/get/staffWorkScheduleList",method = RequestMethod.POST)
     @ResponseBody
     public ResponseV2 getDoctorWorkTime(@RequestBody JSONObject jsonObject) {
         System.out.println(jsonObject.toJSONString());
         String staffId =(String) jsonObject.get("staffId");
 
-        List<DoctorWorkInfo> doctorWorkInfoList;
+        List<String> doctorAppointmentTimeList;//这个医生已经预约的时间
 
         Map<String,String> paraMap = new HashMap<>();
         String startTime = TimeOpt.getCurrentTime().split(" ")[0];;
@@ -158,12 +117,65 @@ public class AppointmentControl {
         paraMap.put("staffId",staffId);
         paraMap.put("startTime",startTime);
         paraMap.put("endTimeTime",endTimeTime);
-        doctorWorkInfoList = appointmentDao.getWorkTimeSevenDays(paraMap);
-        System.out.println(doctorWorkInfoList);
+        doctorAppointmentTimeList = appointmentDao.getWorkTimeSevenDays(paraMap);
+        System.out.println(doctorAppointmentTimeList);
+        Map<String,DoctorWorkInfo> workInfoMap = new HashMap<>();
+        for (String appointmentTime: doctorAppointmentTimeList) {
+            String date = appointmentTime.split(" ")[0];
+            if(workInfoMap.containsKey(date)) {
+                DoctorWorkInfo workInfo = workInfoMap.get(date);
+                if (TimeOpt.moringOrAfterNoon(appointmentTime) > 0) {
+                    int morningNum = workInfo.getMorningNum() + 1;
+                    workInfo.setMorningNum(morningNum);
+                } else {
+                    int afternoonNum = workInfo.getAfternoonNum() + 1;
+                    workInfo.setAfternoonNum(afternoonNum);
+                }
+                workInfoMap.replace(date, workInfo);
+            }else {
+                DoctorWorkInfo workInfo = new DoctorWorkInfo();
+                workInfo.setAppointmentTime(date);
+                if (TimeOpt.moringOrAfterNoon(appointmentTime) > 0) {
+                    int morningNum = workInfo.getMorningNum() + 1;
+                    workInfo.setMorningNum(morningNum);
+                } else {
+                    int afternoonNum = workInfo.getAfternoonNum() + 1;
+                    workInfo.setAfternoonNum(afternoonNum);
+                }
+                workInfoMap.put(date, workInfo);
+            }
+        }
 
-        return ResponseHelper.create(doctorWorkInfoList, 200, "医生上班情况查询成功");
+
+        List<DoctorWorkInfo> workList = new ArrayList<>();
+
+        for (Map.Entry<String,DoctorWorkInfo> entry: workInfoMap.entrySet()) {
+            workList.add(entry.getValue());
+        }
+
+        for (int i = 0; i < 6; i++) {
+            String date = TimeOpt.getFetureDate(i).split(" ")[0];
+            int size = workList.size();
+            boolean flag = false;
+            for (int j = 0; j < size; j++) {
+                if(workList.get(j).getAppointmentTime().equals(date)) {
+                    flag = true;
+                }
+            }
+            if(!flag) {
+                DoctorWorkInfo workInfo = new DoctorWorkInfo();
+                workInfo.setAppointmentTime(date);
+                workList.add(workInfo);
+            }
+        }
+
+        System.out.println(workList);
+
+
+        return ResponseHelper.create(workList, 200, "医生上班情况查询成功");
     }
 
     public static void main(String[] args) {
+
     }
 }
