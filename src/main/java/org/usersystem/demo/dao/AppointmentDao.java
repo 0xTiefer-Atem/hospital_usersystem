@@ -17,13 +17,19 @@ public interface AppointmentDao {
             "#{staffId},#{appointmentTime},#{status},#{createTime}) ")
     void addAppointmentInfo(AppointmentInfo appointmentInfo);
 
-    @Select("select reserve_id,r.user_id,user_name,user_tel,illness_content," +
-            "reserve_time,reserve_status,staff_name,dep_name" +
-            " from reserve_info r left join user_info on r.user_id = user_info.user_id" +
-            " join dep_info d on r.dep_id = d.dep_id left join staff_info s" +
-            " on r.staff_id = s.staff_id where r.user_id=#{user_id} " +
-            " order by reserve_time ")
-    List<AppointmentHistoryInfo> searchReserveHistory(Map<String,String> paraMap);
+    @Select("select distinct ap.appointmentId," +
+            "       ap.appointmentTime," +
+            "       ap.staffId," +
+            "       sI.staffName," +
+            "       ap.status," +
+            "       cliId," +
+            "       cliName" +
+            " from appointmentInfo ap, staffInfo sI ,clinicInfo cI , userInfo uI" +
+            " where ap.staffId = sI.staffId" +
+            " and ap.userId = uI.userId" +
+            " and ap.staffId like CONCAT(cliId,'%')" +
+            " and ap.userId = #{userId} order by ap.appointmentTime desc")
+    List<AppointmentHistoryInfo> searchReserveHistory(String userId);
 
     // where r.user_id=#{user_id} and reserve_time >= #{start_time} and reserve_time <= #{end_time}
     //desc limit #{start},#{size}
@@ -31,8 +37,8 @@ public interface AppointmentDao {
     @Select("select * from reserve_info where reserve_id=#{reserve_id}")
     AppointmentInfo reserveInfoDetail(String reserve_id);
 
-    @Delete("delete from reserve_info where reserve_id = #{reserve_id} and user_id = #{user_id} ")
-    int deleteReserve(Map<String,String> para);
+    @Delete("delete from appointmentInfo where appointmentId = #{appointmentId}")
+    int deleteAppointment(String appointmentId);
 
 
     @Select("select doctor_id, staff_name,staff_sex,staff_pos,work_time,work_status " +
