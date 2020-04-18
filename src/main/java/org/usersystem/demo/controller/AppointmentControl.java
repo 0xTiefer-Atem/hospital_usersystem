@@ -19,8 +19,8 @@ public class AppointmentControl {
     @Resource
     AppointmentDao appointmentDao;
 
-    private static String[] morningTimes = {"08:00:00","09:00:00","10:00:00"};
-    private static String[] afternoonTimes = {"13:00:00","14:00:00","15:00:00"};
+    private static String[] morningTimes = {""," 08:00:00"," 09:00:00"," 10:00:00"};
+    private static String[] afternoonTimes = {""," 13:00:00"," 14:00:00"," 15:00:00"};
 
     //录入预约信息
     @RequestMapping(value = "/appointment/add", method = RequestMethod.POST)
@@ -40,64 +40,60 @@ public class AppointmentControl {
 
         appointmentInfo.setAppointmentId(appointmentId);
         appointmentInfo.setUserId(userId);
-        appointmentInfo.setStaffId(jsonObject.getString("staff_id"));
-        appointmentInfo.setStatus("SUCCESS");
+        appointmentInfo.setStaffId(staffId);
+        appointmentInfo.setStatus("WAIT");
         appointmentInfo.setCreateTime(createTime);
 
         ResponseV2 responseV2 = null;
 
+        String appointmentTime = "";
+
         if("morning".equals(type)) {
-            String appointmentTime = date + morningTimes[num];
-            appointmentInfo.setAppointmentTime(appointmentTime);
-            appointmentDao.addAppointmentInfo(appointmentInfo);
+            appointmentTime = date+"" + morningTimes[num];
+        }else {
+            appointmentTime = date + afternoonTimes[num];
         }
+        appointmentInfo.setAppointmentTime(appointmentTime);
 
-
-        //上午
-        return responseV2;
+        try {
+            appointmentDao.addAppointmentInfo(appointmentInfo);
+            return ResponseHelper.create(200,"预约成功!");
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseHelper.create(500,"预约失败!");
+        }
     }
 
     //查看一段时间内的历史预约记录
-    @RequestMapping(value = "/reserve/history")
+    @RequestMapping(value = "/appointment/history")
     @ResponseBody
-    public String returnReserveById(@RequestParam Map<String,Object> map) {
+    public ResponseV2 returnReserveById(@RequestBody JSONObject jsonObject) {
 
-        System.out.println(map);
-        String user_id =(String) map.get("user_id");
-        HashMap hashMap = new HashMap();
-        hashMap.put("user_id", user_id);
-        List<AppointmentHistoryInfo> reserveList = appointmentDao.searchReserveHistory(hashMap);
-
-        JSONObject jobj = new JSONObject();
-        jobj.put("code",0);
-        jobj.put("msg","");
-        jobj.put("count",reserveList.size());
-        jobj.put("data",reserveList);
-//        System.out.println(jobj.toString());
-        return jobj.toString();
-//        return ResponseHelper.create(reserveList, 200, "历史预约信息查询成功");
-    }
-
-    //一条预约详情
-    @RequestMapping(value = "/reserve/detail", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseV2 reserveInfoDetail(@RequestBody JSONObject para) {
-        String reserve_id = para.getString("reserve_id");
-        AppointmentInfo appointmentInfo = appointmentDao.reserveInfoDetail(reserve_id);
-        return ResponseHelper.create(appointmentInfo, 200, "详细预约信息查询成功");
+        System.out.println(jsonObject);
+        String userId =jsonObject.getString("userId");
+        try {
+            List<AppointmentHistoryInfo> appointmentHistoryList = appointmentDao.searchReserveHistory(userId);
+            System.out.println(appointmentHistoryList);
+            return ResponseHelper.create(appointmentHistoryList,200, "预约历史查询成功");
+        }catch (Exception e) {
+            return ResponseHelper.create(500, "预约历史查询失败");
+        }
     }
 
     //取消预约消息
-    @RequestMapping(value = "/reserve/cancel",method = RequestMethod.POST)
+    @RequestMapping(value = "/appointment/delete",method = RequestMethod.POST)
     @ResponseBody
-    public ResponseV2 cancelReserve(@RequestBody JSONObject para){
-        String reserve_id = para.getString("cancel_id_visit");
-        String user_id = para.getString("user_id");
-        Map<String,String> paraMap = new HashMap<>();
-        paraMap.put("user_id",user_id);
-        paraMap.put("reserve_id",reserve_id);
-        appointmentDao.deleteReserve(paraMap);
-        return ResponseHelper.create(null, 200, "取消预约信息成功,请重新预约");
+    public ResponseV2 cancelReserve(@RequestBody JSONObject jsonObject){
+        System.out.println(jsonObject);
+        String appointmentId = jsonObject.getString("appointmentId");
+        try {
+            appointmentDao.deleteAppointment(appointmentId);
+            return ResponseHelper.create(null, 200, "删除成功");
+        }catch(Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseHelper.create(500, "删除失败");
+        }
+
     }
 
 
@@ -173,9 +169,5 @@ public class AppointmentControl {
 
 
         return ResponseHelper.create(workList, 200, "医生上班情况查询成功");
-    }
-
-    public static void main(String[] args) {
-
     }
 }
