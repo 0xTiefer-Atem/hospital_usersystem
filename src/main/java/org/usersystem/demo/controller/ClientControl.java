@@ -12,6 +12,7 @@ import java.util.*;
 
 @Controller
 @CrossOrigin
+@RequestMapping(value = "/person")
 public class ClientControl {
 
     @Resource
