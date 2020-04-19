@@ -18,12 +18,12 @@ public interface CaseDao {
             " where cI.userId = uI.userId" +
             " and cI.staffId = sI.staffId" +
             " and sI.staffId like concat(clI.cliId,'%')" +
-            " and cI.userId = #{id}")
+            " and cI.userId = #{id} order by cI.createTime asc")
     List<CaseInfo> getIllnessHistoryById(String id);
 
 
-    @Update("update illness_info set pay_status = 'PAY' where illness_id = #{illness_id}")
-    void updatePayStatus(Map<String,String> para);
+    @Update("update caseInfo set payStatus = 'PAY' where caseId = #{caseId}")
+    void updatePayStatus(String caseId);
 
 
     @Select("select medical_id,medical_name,medical_price from medical_info where medical_id = #{medical_id}  ")
