@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import java.util.List;
 @RestController
 @CrossOrigin
+@RequestMapping(value = "/person")
 public class OtherControl {
     @Resource
     OtherDao otherDao;
