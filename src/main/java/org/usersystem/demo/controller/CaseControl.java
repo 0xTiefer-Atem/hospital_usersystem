@@ -37,14 +37,16 @@ public class CaseControl {
 
 
 
-    @RequestMapping(value = "/illness/pay" ,method = RequestMethod.POST)
+    @RequestMapping(value = "/case/pay" ,method = RequestMethod.POST)
     @ResponseBody
     public ResponseV2 paymoney(@RequestBody JSONObject jsonObject){
-        String illness_id = jsonObject.getString("illness_id");
-        System.out.println(illness_id);
-        Map<String,String> para = new HashMap<>();
-        para.put("illness_id",illness_id);
-        illnessDao.updatePayStatus(para);
-        return ResponseHelper.create(null,200,"支付成功");
+        String caseId = jsonObject.getString("caseId");
+        System.out.println(caseId);
+        try{
+            illnessDao.updatePayStatus(caseId);
+            return ResponseHelper.create(200,"支付成功");
+        }catch (Exception e){
+            return ResponseHelper.create(500, "支付失败");
+        }
     }
 }
