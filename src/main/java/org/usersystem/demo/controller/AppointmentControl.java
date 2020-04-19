@@ -14,6 +14,7 @@ import java.util.*;
 
 @Controller
 @CrossOrigin
+@RequestMapping(value = "/person")
 public class AppointmentControl {
 
     @Resource
