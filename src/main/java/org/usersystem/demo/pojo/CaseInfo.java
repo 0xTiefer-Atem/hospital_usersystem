@@ -15,7 +15,8 @@ import java.util.List;
 //多条为看病历史
 @ToString
 public class CaseInfo {
-    private String CaseId;//病例id
+    private String caseId;//病例id
+    private String cliName;//科室名称
     private String userName;//用户姓名
     private String userIllness;//病情描述
     private String staffName;//治疗医生姓名
