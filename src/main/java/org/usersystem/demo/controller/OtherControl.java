@@ -18,6 +18,7 @@ public class OtherControl {
     @Resource
     OtherDao otherDao;
 
+    //获取科室信息
     @RequestMapping(value = "/getCliInfo",method = RequestMethod.GET)
     @ResponseBody
     public ResponseV2 getCliInfo(){
@@ -31,6 +32,7 @@ public class OtherControl {
     }
 
 
+    //获取医生信息
     @RequestMapping(value = "/getStaffInfo",method = RequestMethod.POST)
     @ResponseBody
     public ResponseV2 getStaffInfo(@RequestBody JSONObject jsonObject){
