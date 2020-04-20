@@ -40,7 +40,7 @@ public class CaseControl {
 
     @RequestMapping(value = "/case/pay" ,method = RequestMethod.POST)
     @ResponseBody
-    public ResponseV2 paymoney(@RequestBody JSONObject jsonObject){
+    public ResponseV2 payMoney(@RequestBody JSONObject jsonObject){
         String caseId = jsonObject.getString("caseId");
         System.out.println(caseId);
         try{
