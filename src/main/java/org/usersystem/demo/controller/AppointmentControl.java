@@ -20,13 +20,15 @@ public class AppointmentControl {
     @Resource
     AppointmentDao appointmentDao;
 
+    //预约时间表
     private static String[] morningTimes = {""," 08:00:00"," 09:00:00"," 10:00:00"};
     private static String[] afternoonTimes = {""," 13:00:00"," 14:00:00"," 15:00:00"};
 
-    //录入预约信息
+    //录入预约信息，根据value可以匹配的到前端发送http的代码，之后同理
     @RequestMapping(value = "/appointment/add", method = RequestMethod.POST)
     @ResponseBody
     public ResponseV2 addReserve(@RequestBody JSONObject jsonObject) {
+        //从前端获取的数据json格式
         System.out.println(jsonObject);
         String userId = jsonObject.getString("userId");//获得用户id
         String type = jsonObject.getString("type");//约上午还是下午
@@ -34,7 +36,6 @@ public class AppointmentControl {
         String staffId = jsonObject.getString("staffId");//要预约的医生的id
         String date = jsonObject.getString("date");//预约的时间
 
-        Map<String, String> paraMap = new HashMap();
         AppointmentInfo appointmentInfo = new AppointmentInfo();
         String appointmentId = GetUUID.getUUID();
         String createTime = TimeOpt.getCurrentTime();
@@ -45,18 +46,18 @@ public class AppointmentControl {
         appointmentInfo.setStatus("WAIT");
         appointmentInfo.setCreateTime(createTime);
 
-        ResponseV2 responseV2 = null;
-
         String appointmentTime = "";
 
+        //判断是上午还是下午预约
         if("morning".equals(type)) {
-            appointmentTime = date+"" + morningTimes[num];
+            appointmentTime = date + morningTimes[num];
         }else {
             appointmentTime = date + afternoonTimes[num];
         }
         appointmentInfo.setAppointmentTime(appointmentTime);
 
         try {
+            //插入信息
             appointmentDao.addAppointmentInfo(appointmentInfo);
             return ResponseHelper.create(200,"预约成功!");
         }catch (Exception e) {
@@ -86,6 +87,8 @@ public class AppointmentControl {
     @ResponseBody
     public ResponseV2 cancelReserve(@RequestBody JSONObject jsonObject){
         System.out.println(jsonObject);
+
+        //获取前端的数据
         String appointmentId = jsonObject.getString("appointmentId");
         try {
             appointmentDao.deleteAppointment(appointmentId);
