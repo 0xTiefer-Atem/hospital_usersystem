@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.usersystem.demo.pojo.CaseInfo;
-import org.usersystem.demo.pojo.MedicalInfo;
+//import org.usersystem.demo.pojo.MedicalInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,7 @@ public interface CaseDao {
     void updatePayStatus(String caseId);
 
 
-    @Select("select medical_id,medical_name,medical_price from medical_info where medical_id = #{medical_id}  ")
-    MedicalInfo getMedicalById(String medical_id);
+//    @Select("select medical_id,medical_name,medical_price from medical_info where medical_id = #{medical_id}  ")
+//    MedicalInfo getMedicalById(String medical_id);
 
 }
