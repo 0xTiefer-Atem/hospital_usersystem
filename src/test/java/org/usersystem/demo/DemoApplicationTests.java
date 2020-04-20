@@ -11,8 +11,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.usersystem.demo.dao.UserDao;
 import org.usersystem.demo.opt.GetUUID;
 import org.usersystem.demo.opt.TimeOpt;
-import org.usersystem.demo.pojo.MedicalInfo;
+//import org.usersystem.demo.pojo.MedicalInfo;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,7 +25,7 @@ import java.util.regex.Pattern;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class DemoApplicationTests {
-    @Autowired
+    @Resource
     UserDao userDao;
 
     @Test
@@ -48,24 +49,24 @@ public class DemoApplicationTests {
         }
     }
 
-    @Test
-    public void my() {
-        String[] types = {"1", "2"};
-        String[] medical_names = {"阿司匹林(001)", "感冒颗粒(002)", "感冒冲剂(003)", "点滴(004)"};
-        String[] medical_nums = {"1", "2", "3"};
-        List<MedicalInfo> medicalInfoList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            int random = (int) (Math.random() * 10);
-            String type = types[random % 2];
-            String medical_name = medical_names[random % 4];
-            String medical_num = medical_nums[random % 3];
-            MedicalInfo medicalInfo = new MedicalInfo();
-            medicalInfo.setMedical_name(medical_name);
-            medicalInfoList.add(medicalInfo);
-        }
-        System.out.println(JSON.toJSONString(medicalInfoList));
-
-    }
+//    @Test
+//    public void my() {
+//        String[] types = {"1", "2"};
+//        String[] medical_names = {"阿司匹林(001)", "感冒颗粒(002)", "感冒冲剂(003)", "点滴(004)"};
+//        String[] medical_nums = {"1", "2", "3"};
+//        List<MedicalInfo> medicalInfoList = new ArrayList<>();
+//        for (int i = 0; i < 10; i++) {
+//            int random = (int) (Math.random() * 10);
+//            String type = types[random % 2];
+//            String medical_name = medical_names[random % 4];
+//            String medical_num = medical_nums[random % 3];
+//            MedicalInfo medicalInfo = new MedicalInfo();
+//            medicalInfo.setMedical_name(medical_name);
+//            medicalInfoList.add(medicalInfo);
+//        }
+//        System.out.println(JSON.toJSONString(medicalInfoList));
+//
+//    }
 
     @Test
     public void test111() {
