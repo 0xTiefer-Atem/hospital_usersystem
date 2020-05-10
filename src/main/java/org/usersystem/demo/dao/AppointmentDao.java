@@ -58,7 +58,13 @@ public interface AppointmentDao {
     List<String> getWorkTimeSevenDays(Map<String,String> para);
 
 
-    @Select("select count(reserve_id) from reserve_info where staff_id = #{staff_id} " +
-            "and reserve_time between #{work_time1} and #{work_time2}")
-    int getReserveNum(Map<String,String> para);
+    @Select("select appointmentId from appointmentInfo" +
+            " where userId = #{id} and" +
+            " DATE_FORMAT(appointmentTime,'%Y-%m-%d') = #{date} and" +
+            " status = 'WAIT'")
+    List<String> getAppointmentNum(String id, String date);
+
+
+
+
 }
