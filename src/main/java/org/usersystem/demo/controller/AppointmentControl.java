@@ -14,7 +14,7 @@ import java.util.*;
 
 @Controller
 @CrossOrigin
-@RequestMapping(value = "/person")
+@RequestMapping(value = "/api")
 public class AppointmentControl {
 
     @Resource
@@ -27,7 +27,7 @@ public class AppointmentControl {
     //录入预约信息，根据value可以匹配的到前端发送http的代码，之后同理
     @RequestMapping(value = "/appointment/add", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseV2 addReserve(@RequestBody JSONObject jsonObject) {
+    public ResponseV2 addAppointment(@RequestBody JSONObject jsonObject) {
         //从前端获取的数据json格式
         System.out.println(jsonObject);
         String userId = jsonObject.getString("userId");//获得用户id
@@ -35,6 +35,18 @@ public class AppointmentControl {
         int num = jsonObject.getInteger("num");//他是第几个预约的
         String staffId = jsonObject.getString("staffId");//要预约的医生的id
         String date = jsonObject.getString("date");//预约的时间
+
+        List<String> appointList = null;
+        try {
+            appointList = appointmentDao.getAppointmentNum(userId,date);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseHelper.create(500,"预约失败!");
+        }
+
+        if(appointList.size() > 1) {
+            return ResponseHelper.create(201,"预约失败!每人每天只能预约一次！");
+        }
 
         AppointmentInfo appointmentInfo = new AppointmentInfo();
         String appointmentId = GetUUID.getUUID();
