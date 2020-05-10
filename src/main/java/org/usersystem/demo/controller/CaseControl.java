@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Controller
 @CrossOrigin
-@RequestMapping(value = "/person")
+@RequestMapping(value = "/api")
 public class CaseControl {
 
     @Resource
