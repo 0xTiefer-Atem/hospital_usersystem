@@ -21,8 +21,8 @@ public class AppointmentControl {
     AppointmentDao appointmentDao;
 
     //预约时间表
-    private static String[] morningTimes = {""," 08:00:00"," 09:00:00"," 10:00:00"};
-    private static String[] afternoonTimes = {""," 13:00:00"," 14:00:00"," 15:00:00"};
+    private static String[] morningTimes = {"", " 08:00:00", " 09:00:00", " 10:00:00"};
+    private static String[] afternoonTimes = {"", " 13:00:00", " 14:00:00", " 15:00:00"};
 
     //录入预约信息，根据value可以匹配的到前端发送http的代码，之后同理
     @RequestMapping(value = "/appointment/add", method = RequestMethod.POST)
@@ -38,14 +38,14 @@ public class AppointmentControl {
 
         List<String> appointList = null;
         try {
-            appointList = appointmentDao.getAppointmentNum(userId,date);
-        }catch (Exception e){
+            appointList = appointmentDao.getAppointmentNum(userId, date);
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-            return ResponseHelper.create(500,"预约失败!");
+            return ResponseHelper.create(500, "预约失败!");
         }
 
-        if(appointList.size() > 1) {
-            return ResponseHelper.create(201,"预约失败!每人每天只能预约一次！");
+        if (appointList.size() > 1) {
+            return ResponseHelper.create(201, "预约失败!每人每天只能预约一次！");
         }
 
         AppointmentInfo appointmentInfo = new AppointmentInfo();
@@ -61,9 +61,9 @@ public class AppointmentControl {
         String appointmentTime = "";
 
         //判断是上午还是下午预约
-        if("morning".equals(type)) {
+        if ("morning".equals(type)) {
             appointmentTime = date + morningTimes[num];
-        }else {
+        } else {
             appointmentTime = date + afternoonTimes[num];
         }
         appointmentInfo.setAppointmentTime(appointmentTime);
@@ -71,10 +71,10 @@ public class AppointmentControl {
         try {
             //插入信息
             appointmentDao.addAppointmentInfo(appointmentInfo);
-            return ResponseHelper.create(200,"预约成功!");
-        }catch (Exception e) {
+            return ResponseHelper.create(200, "预约成功!");
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-            return ResponseHelper.create(500,"预约失败!");
+            return ResponseHelper.create(500, "预约失败!");
         }
     }
 
@@ -84,20 +84,20 @@ public class AppointmentControl {
     public ResponseV2 returnReserveById(@RequestBody JSONObject jsonObject) {
 
         System.out.println(jsonObject);
-        String userId =jsonObject.getString("userId");
+        String userId = jsonObject.getString("userId");
         try {
             List<AppointmentHistoryInfo> appointmentHistoryList = appointmentDao.searchReserveHistory(userId);
             System.out.println(appointmentHistoryList);
-            return ResponseHelper.create(appointmentHistoryList,200, "预约历史查询成功");
-        }catch (Exception e) {
+            return ResponseHelper.create(appointmentHistoryList, 200, "预约历史查询成功");
+        } catch (Exception e) {
             return ResponseHelper.create(500, "预约历史查询失败");
         }
     }
 
     //取消预约消息
-    @RequestMapping(value = "/appointment/delete",method = RequestMethod.POST)
+    @RequestMapping(value = "/appointment/delete", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseV2 cancelReserve(@RequestBody JSONObject jsonObject){
+    public ResponseV2 cancelReserve(@RequestBody JSONObject jsonObject) {
         System.out.println(jsonObject);
 
         //获取前端的数据
@@ -105,7 +105,7 @@ public class AppointmentControl {
         try {
             appointmentDao.deleteAppointment(appointmentId);
             return ResponseHelper.create(null, 200, "删除成功");
-        }catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseHelper.create(500, "删除失败");
         }
@@ -113,28 +113,28 @@ public class AppointmentControl {
     }
 
 
-
     //查询医生7天内预约情况
-    @RequestMapping(value = "/get/staffWorkScheduleList",method = RequestMethod.POST)
+    @RequestMapping(value = "/get/staffWorkScheduleList", method = RequestMethod.POST)
     @ResponseBody
     public ResponseV2 getDoctorWorkTime(@RequestBody JSONObject jsonObject) {
         System.out.println(jsonObject.toJSONString());
-        String staffId =(String) jsonObject.get("staffId");
+        String staffId = (String) jsonObject.get("staffId");
 
         List<String> doctorAppointmentTimeList;//这个医生已经预约的时间
 
-        Map<String,String> paraMap = new HashMap<>();
-        String startTime = TimeOpt.getCurrentTime().split(" ")[0];;
+        Map<String, String> paraMap = new HashMap<>();
+        String startTime = TimeOpt.getCurrentTime().split(" ")[0];
+        ;
         String endTimeTime = TimeOpt.getFetureDate(7).split(" ")[0];
-        paraMap.put("staffId",staffId);
-        paraMap.put("startTime",startTime);
-        paraMap.put("endTimeTime",endTimeTime);
+        paraMap.put("staffId", staffId);
+        paraMap.put("startTime", startTime);
+        paraMap.put("endTimeTime", endTimeTime);
         doctorAppointmentTimeList = appointmentDao.getWorkTimeSevenDays(paraMap);
         System.out.println(doctorAppointmentTimeList);
-        Map<String,DoctorWorkInfo> workInfoMap = new HashMap<>();
-        for (String appointmentTime: doctorAppointmentTimeList) {
+        Map<String, DoctorWorkInfo> workInfoMap = new HashMap<>();
+        for (String appointmentTime : doctorAppointmentTimeList) {
             String date = appointmentTime.split(" ")[0];
-            if(workInfoMap.containsKey(date)) {
+            if (workInfoMap.containsKey(date)) {
                 DoctorWorkInfo workInfo = workInfoMap.get(date);
                 if (TimeOpt.moringOrAfterNoon(appointmentTime) > 0) {
                     int morningNum = workInfo.getMorningNum() + 1;
@@ -144,7 +144,7 @@ public class AppointmentControl {
                     workInfo.setAfternoonNum(afternoonNum);
                 }
                 workInfoMap.replace(date, workInfo);
-            }else {
+            } else {
                 DoctorWorkInfo workInfo = new DoctorWorkInfo();
                 workInfo.setAppointmentTime(date);
                 if (TimeOpt.moringOrAfterNoon(appointmentTime) > 0) {
@@ -161,7 +161,7 @@ public class AppointmentControl {
 
         List<DoctorWorkInfo> workList = new ArrayList<>();
 
-        for (Map.Entry<String,DoctorWorkInfo> entry: workInfoMap.entrySet()) {
+        for (Map.Entry<String, DoctorWorkInfo> entry : workInfoMap.entrySet()) {
             workList.add(entry.getValue());
         }
 
@@ -170,11 +170,11 @@ public class AppointmentControl {
             int size = workList.size();
             boolean flag = false;
             for (int j = 0; j < size; j++) {
-                if(workList.get(j).getAppointmentTime().equals(date)) {
+                if (workList.get(j).getAppointmentTime().equals(date)) {
                     flag = true;
                 }
             }
-            if(!flag) {
+            if (!flag) {
                 DoctorWorkInfo workInfo = new DoctorWorkInfo();
                 workInfo.setAppointmentTime(date);
                 workList.add(workInfo);
