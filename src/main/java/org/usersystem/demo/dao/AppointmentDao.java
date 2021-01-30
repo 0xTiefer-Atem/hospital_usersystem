@@ -46,7 +46,7 @@ public interface AppointmentDao {
             "where  to_days(work_time) >= to_days(now()) " +
             " and to_days(work_time) < to_days(#{future_time}) and d.doctor_id like " +
             "CONCAT(#{dep_id},'%') ")
-    List<DoctorWorkInfo> getWorkTimeToday(Map<String,String> para);
+    List<DoctorWorkInfo> getWorkTimeToday(Map<String, String> para);
 
 
     @Select("select distinct" +
@@ -55,7 +55,7 @@ public interface AppointmentDao {
             " where ap.staffId = #{staffId}" +
             "  and ap.appointmentTime between #{startTime} and #{endTimeTime}" +
             "  and ap.status = 'WAIT'")
-    List<String> getWorkTimeSevenDays(Map<String,String> para);
+    List<String> getWorkTimeSevenDays(Map<String, String> para);
 
 
     @Select("select appointmentId from appointmentInfo" +
@@ -63,8 +63,6 @@ public interface AppointmentDao {
             " DATE_FORMAT(appointmentTime,'%Y-%m-%d') = #{date} and" +
             " status = 'WAIT'")
     List<String> getAppointmentNum(String id, String date);
-
-
 
 
 }
