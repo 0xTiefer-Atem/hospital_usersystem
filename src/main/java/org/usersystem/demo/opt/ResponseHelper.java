@@ -15,7 +15,7 @@ public class ResponseHelper {
     }
 
     public static <T> ResponseV2 create(T data, int status, String msg) {
-        return ResponseV2.builder().result(Result.builder().data(data).extras((Object)null).build()).status(status).msg(msg).build();
+        return ResponseV2.builder().result(Result.builder().data(data).extras((Object) null).build()).status(status).msg(msg).build();
     }
 
     public static <T> ResponseV2 create(T data) {
@@ -23,16 +23,16 @@ public class ResponseHelper {
     }
 
     public static ResponseV2 create(int code) {
-        return create((Object)null, code, "请求成功");
+        return create((Object) null, code, "请求成功");
     }
+
     public static ResponseV2 create(int code, String msg) {
-        return create((Object)null, code, msg);
+        return create((Object) null, code, msg);
     }
 
     public static ResponseV2 create() {
-        return create((Object)null, 200, "请求成功");
+        return create((Object) null, 200, "请求成功");
     }
-
 
 
     public static void writeCookie(HttpServletResponse response, String cookieName, String value, String path, int maxAge, String domain) {
