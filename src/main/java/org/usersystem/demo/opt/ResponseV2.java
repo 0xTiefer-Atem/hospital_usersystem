@@ -52,11 +52,12 @@ public class ResponseV2 {
         } else if (!(o instanceof ResponseV2)) {
             return false;
         } else {
-            ResponseV2 other = (ResponseV2)o;
+            ResponseV2 other = (ResponseV2) o;
             if (!other.canEqual(this)) {
                 return false;
             } else {
-                label47: {
+                label47:
+                {
                     Object this$status = this.getStatus();
                     Object other$status = other.getStatus();
                     if (this$status == null) {
@@ -98,7 +99,6 @@ public class ResponseV2 {
     protected boolean canEqual(final Object other) {
         return other instanceof ResponseV2;
     }
-
 
 
     public String toString() {
