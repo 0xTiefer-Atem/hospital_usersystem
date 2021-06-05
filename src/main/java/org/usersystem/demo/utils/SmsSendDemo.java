@@ -44,19 +44,19 @@ public class SmsSendDemo {
     private static HttpClient httpClient = HttpClient4Utils.createHttpClient(100, 20, 10000, 2000, 2000);
 
 
+    public static void TextMessage(String code, String mobile) throws IOException {
+        String templateId = "10699";
+        // 模板参数对应的json格式数据,例如模板为您的验证码为${p1},请于${p2}时间登陆到我们的服务器
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", code);
+        jsonObject.put("p2", "20180816");
+        String params = jsonObject.toJSONString();
+        Map<String, String> datas = buildParam(mobile, templateId, params);
+        String result = HttpClient4Utils.sendPost(httpClient, API_URL, datas, Consts.UTF_8);
+        System.out.println("result = [" + result + "]");
+    }
 
-     public static void TextMessage(String code,String mobile) throws IOException {
-         String templateId="10699";
-         // 模板参数对应的json格式数据,例如模板为您的验证码为${p1},请于${p2}时间登陆到我们的服务器
-         JSONObject jsonObject = new JSONObject();
-         jsonObject.put("code",code);
-         jsonObject.put("p2", "20180816");
-         String params = jsonObject.toJSONString();
-         Map<String, String> datas = buildParam(mobile, templateId, params);
-         String result = HttpClient4Utils.sendPost(httpClient, API_URL, datas, Consts.UTF_8);
-         System.out.println("result = [" + result + "]");
-     }
-      private static Map<String, String> buildParam(String mobile, String templateId, String params) throws IOException {
+    private static Map<String, String> buildParam(String mobile, String templateId, String params) throws IOException {
         Map map = new HashMap<String, String>();
         map.put("businessId", BUSINESSID);
         map.put("timestamp", String.valueOf(System.currentTimeMillis()));
@@ -71,19 +71,18 @@ public class SmsSendDemo {
         String sign = SignatureUtils.genSignature(SECRETKEY, map);
         map.put("signature", sign);
         return map;
-      }
+    }
+
     /**
      * @param args
      * @throws Exception
      */
 
 
-
-
     //测试方法
     public static void main(String[] args) throws Exception {
         //两个参数 code 4位随机数  monile： 手机号
-        SmsSendDemo.TextMessage("8888","17602617335");
+        SmsSendDemo.TextMessage("8888", "17602617335");
         // 此处用申请通过的模板id
 
     }

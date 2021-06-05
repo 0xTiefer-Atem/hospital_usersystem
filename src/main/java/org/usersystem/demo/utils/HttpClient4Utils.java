@@ -1,6 +1,6 @@
 /*
  * @(#) HttpClientUtils.java 2016年2月3日
- * 
+ *
  * Copyright 2010 NetEase.com, Inc. All rights reserved.
  */
 package org.usersystem.demo.utils;

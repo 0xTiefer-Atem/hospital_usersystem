@@ -30,7 +30,7 @@ public class Result<T> {
         } else if (!(o instanceof Result)) {
             return false;
         } else {
-            Result<?> other = (Result)o;
+            Result<?> other = (Result) o;
             if (!other.canEqual(this)) {
                 return false;
             } else {

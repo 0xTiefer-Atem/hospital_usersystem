@@ -11,9 +11,9 @@
 
 
     <groupId>org.usersystem</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>hospital_usersystem</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
+    <name>hospital_usersystem</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
