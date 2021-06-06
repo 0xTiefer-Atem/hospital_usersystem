@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.usersystem.mapper.ClinicInfoMapper">
+
+    <resultMap id="BaseResultMap" type="org.usersystem.entity.ClinicInfo">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="cliId" column="cliId" jdbcType="VARCHAR"/>
+        <result property="cliName" column="cliName" jdbcType="VARCHAR"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="medicMenusList" column="medicMenusList" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,cliId,cliName,
+        createTime,medicMenusList
+    </sql>
+</mapper>
