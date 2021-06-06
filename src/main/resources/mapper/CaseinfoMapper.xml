@@ -29,6 +29,6 @@
     <update id="addFeedBackByRegisterId">
         update caseInfo
         set feedBack = #{feedBack}
-        where registerId = #{registerId}
+        where caseId = #{caseId}
     </update>
 </mapper>

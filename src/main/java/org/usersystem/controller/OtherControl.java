@@ -2,6 +2,8 @@ package org.usersystem.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.usersystem.dao.OtherDao;
 import org.usersystem.opt.ResponseHelper;
@@ -12,6 +14,7 @@ import org.usersystem.pojo.StaffInfo;
 import javax.annotation.Resource;
 import java.util.List;
 
+@Api(tags = "其他操作接口")
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/api")
@@ -19,9 +22,8 @@ public class OtherControl {
     @Resource
     OtherDao otherDao;
 
-    //获取科室信息
+    @ApiOperation("获取科室信息")
     @RequestMapping(value = "/getCliInfo", method = RequestMethod.GET)
-    @ResponseBody
     public ResponseV2 getCliInfo() {
         try {
             List<CliInfo> list = otherDao.getCliInfo();
@@ -33,9 +35,8 @@ public class OtherControl {
     }
 
 
-    //获取医生信息
+    @ApiOperation("获取医生信息")
     @RequestMapping(value = "/getStaffInfo", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseV2 getStaffInfo(@RequestBody JSONObject jsonObject) {
         String id = jsonObject.getString("id");
         try {
@@ -45,5 +46,11 @@ public class OtherControl {
         } catch (Exception e) {
             return ResponseHelper.create(500, "查询失败");
         }
+    }
+
+    @ApiOperation("获取医生信息")
+    @GetMapping("/getStaffInfoList")
+    public ResponseV2 getStaffInfoList() {
+        return ResponseHelper.create(otherDao.getStaffInfoList());
     }
 }

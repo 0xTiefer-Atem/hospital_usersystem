@@ -16,11 +16,6 @@ import org.usersystem.vo.request.FeedBackRequest;
 @Service
 public class CaseServiceImpl implements CaseService {
 
-
-    @Autowired
-    private AppointmentInfoMapper appointmentInfoMapper;
-
-
     @Autowired
     private RegisterInfoMapper registerInfoMapper;
 
@@ -35,13 +30,7 @@ public class CaseServiceImpl implements CaseService {
      */
     @Override
     public void addFeedBack(FeedBackRequest request) {
-        String appointmentId = request.getAppointmentId();
-
-        //查询挂号id
-        String registerId = registerInfoMapper.getRegisterIdByAppointmentId(appointmentId);
-
-
         //根据挂号id更新反馈
-        caseInfoMapper.addFeedBackByRegisterId(registerId, request.getFeedBack());
+        caseInfoMapper.addFeedBackByRegisterId(request.getCaseId(), request.getFeedBack());
     }
 }

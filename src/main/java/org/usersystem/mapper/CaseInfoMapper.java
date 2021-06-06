@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface CaseInfoMapper {
-    void addFeedBackByRegisterId(@Param("registerId") String registerId, @Param("feedBack") String feedBack);
+    void addFeedBackByRegisterId(@Param("caseId") String caseId, @Param("feedBack") String feedBack);
 }

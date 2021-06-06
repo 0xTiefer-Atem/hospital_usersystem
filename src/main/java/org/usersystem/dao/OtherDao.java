@@ -16,4 +16,7 @@ public interface OtherDao {
     @Select("select staffId,staffName from staffInfo where staffId like CONCAT(#{id},'%') ")
     List<StaffInfo> getStaffInfo(String id);
 
+    @Select("select * from staffInfo")
+    List<StaffInfo> getStaffInfoList();
+
 }

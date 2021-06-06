@@ -28,8 +28,7 @@ public class AppointmentControl {
     @Resource
     private AppointmentDao appointmentDao;
 
-    @Resource
-    private CaseService caseService;
+
 
     //预约时间表
     private static String[] morningTimes = {"", " 08:00:00", " 09:00:00", " 10:00:00"};
@@ -192,15 +191,5 @@ public class AppointmentControl {
         return ResponseHelper.create(workList, 200, "医生上班情况查询成功");
     }
 
-    @ApiOperation("病人诊后意见反馈")
-    @PostMapping("/add/feedback")
-    public ResponseV2 addFeedBack(@RequestBody FeedBackRequest request) {
-        try {
-            caseService.addFeedBack(request);
-            return ResponseHelper.create();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseHelper.create(ResultCodeEnum.UPDATE_ERROR.getCode(), ResultCodeEnum.UPDATE_ERROR.getMsg());
-        }
-    }
+
 }

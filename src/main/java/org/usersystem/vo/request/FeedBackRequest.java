@@ -15,7 +15,7 @@ public class FeedBackRequest {
     /**
      * 预约id
      */
-    private String appointmentId;
+    private String caseId;
 
     /**
      * 反馈信息
