@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.usersystem.mapper.RegisterInfoMapper">
+
+    <resultMap id="BaseResultMap" type="org.usersystem.entity.RegisterInfo">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="registerId" column="registerId" jdbcType="VARCHAR"/>
+        <result property="appointmentId" column="appointmentId" jdbcType="VARCHAR"/>
+        <result property="staffId" column="staffId" jdbcType="VARCHAR"/>
+        <result property="userId" column="userId" jdbcType="VARCHAR"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,registerId,appointmentId,
+        staffId,userId,createTime,
+        status
+    </sql>
+    <select id="getRegisterIdByAppointmentId" resultType="java.lang.String">
+        select registerId from registerInfo where appointmentId = #{appointmentId}
+    </select>
+</mapper>
